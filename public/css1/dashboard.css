@@ -1,0 +1,416 @@
+/* ================= CORRECTION NATIVE & BOX-SIZING ================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.mg-dashboard {
+    min-height: 100vh;
+    background: #f5f7fb;
+    color: #172033;
+    padding: 16px;
+    padding-bottom: 95px; /* Espace pour la barre mobile du bas */
+    font-family: system-ui, -apple-system, sans-serif;
+    -webkit-text-size-adjust: 100%;
+}
+
+/* ================= COMPORTEMENT UNIQUE POUR TOUS LES TÉLÉPHONES (JUSQU'À 767px) ================= */
+/* À cette taille (500px inclus), TOUT s'empile verticalement de force */
+
+.mg-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.mg-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.mg-brand strong {
+    color: #1769ff;
+}
+
+.mg-logo {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1769ff;
+    color: white;
+    flex-shrink: 0;
+}
+
+.mg-welcome {
+    display: none; /* Masqué sur téléphone pour garder l'alignement propre */
+}
+
+.mg-header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.mg-icon-btn,
+.mg-avatar {
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-dot {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    background: #e54848;
+    border-radius: 50%;
+}
+
+.mg-avatar {
+    background: #1769ff;
+    color: white;
+    font-weight: 700;
+}
+
+/* JOURNÉE : Mode vertical obligatoire */
+.mg-day-card {
+    width: 100%;
+    margin-bottom: 25px;
+    padding: 20px;
+    border-radius: 20px;
+    background: #172033;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+}
+
+.mg-day-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .7px;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #2ddc84;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.mg-day-card h2 {
+    margin: 6px 0;
+    font-size: 18px;
+}
+
+.mg-day-card p {
+    margin: 0;
+    color: #aeb7c8;
+    font-size: 14px;
+}
+
+.mg-close-day {
+    width: 100%;
+    background: rgba(255,255,255,.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,.15);
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* STATISTIQUES : Mode vertical sur une seule colonne */
+.mg-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.mg-stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,.04);
+}
+
+.mg-stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.mg-stat-card span {
+    font-size: 13px;
+    color: #7c8596;
+    margin-bottom: 2px;
+}
+
+.mg-stat-card strong {
+    font-size: 16px;
+}
+
+.mg-stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.mg-stat-icon.revenue { background: #eafaf2; color: #159957; }
+.mg-stat-icon.expense { background: #fff0f0; color: #e54848; }
+.mg-stat-icon.profit { background: #eef4ff; color: #1769ff; }
+.mg-stat-icon.sessions { background: #f4f0ff; color: #7c4dff; }
+
+/* SECTIONS TITRES */
+.mg-section {
+    margin-bottom: 30px;
+}
+
+.mg-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.mg-overline {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1769ff;
+    letter-spacing: 1px;
+}
+
+.mg-section-title h2 {
+    margin: 2px 0;
+    font-size: 18px;
+}
+
+.mg-see-all {
+    color: #1769ff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ================= LA CORRECTION SOUHAITÉE : CONSOLES SUR MOBILE ================= */
+.mg-console-grid {
+    display: flex;
+    flex-direction: column; /* Force le passage en dessous de la PS2 par défaut */
+    gap: 16px;
+}
+
+.mg-console-card {
+    width: 100%; /* Prend toute la largeur disponible */
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.04);
+}
+
+.console-top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.console-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.console-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #eef4ff;
+    color: #1769ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.console-name h3 {
+    font-size: 16px;
+}
+
+.console-type {
+    color: #8a93a3;
+    font-size: 11px;
+}
+
+.console-status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.playing-status { background: #fff0f0; color: #e54848; }
+.available-status { background: #eafaf2; color: #159957; }
+
+/* TIMER & FOOTER */
+.timer-container { margin: 20px 0; }
+.timer-container span { color: #8a93a3; font-size: 12px; }
+.timer-container strong { display: block; font-size: 30px; margin: 4px 0 8px; }
+.timer-progress { height: 6px; background: #edf0f5; border-radius: 10px; overflow: hidden; }
+.timer-progress div { height: 100%; background: #1769ff; }
+
+.console-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #edf0f5;
+    padding-top: 12px;
+    gap: 10px;
+}
+
+.console-footer small { display: block; color: #8a93a3; }
+.console-footer strong { font-size: 15px; }
+
+.mg-action-btn, .mg-start-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mg-action-btn { background: #eef4ff; color: #1769ff; }
+.available-content { text-align: center; padding: 20px 10px; }
+.available-content i { font-size: 32px; color: #1769ff; }
+.available-content h4 { margin: 8px 0 4px; font-size: 15px; }
+.available-content p { color: #8a93a3; font-size: 12px; }
+.mg-start-btn { width: 100%; background: #1769ff; color: white; padding: 12px; }
+
+/* FINANCES BILAN */
+.mg-finance-card {
+    background: white;
+    border-radius: 20px;
+    padding: 5px 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.04);
+}
+
+.finance-item, .finance-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    gap: 10px;
+}
+
+.finance-item { border-bottom: 1px solid #edf0f5; }
+.finance-item span { color: #70798b; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.finance-item strong { color: #172033; font-size: 14px; }
+.finance-total { font-size: 15px; font-weight: 700; }
+
+/* BARRE MOBILE DU BAS */
+.mg-bottom-nav {
+    position: fixed;
+    display: flex;
+    bottom: 0; left: 0; right: 0;
+    height: 64px;
+    background: white;
+    border-top: 1px solid #e9edf3;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.03);
+}
+
+.mg-bottom-nav a {
+    text-decoration: none;
+    color: #8a93a3;
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex: 1;
+}
+
+.mg-bottom-nav i { font-size: 18px; }
+.mg-bottom-nav a.active { color: #1769ff; font-weight: 700; }
+
+
+/* ================= GRANDS ÉCRANS : TABLETTES ET ORDINATEURS (A PARTIR DE 768px) ================= */
+@media (min-width: 768px) {
+    .mg-dashboard { padding: 24px; padding-bottom: 40px; }
+    .mg-welcome { display: block; }
+    
+    .mg-day-card { flex-direction: row; align-items: center; }
+    .mg-close-day { width: auto; }
+    
+    /* Les statistiques se mettent sur 2 colonnes */
+    .mg-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    /* C'est ICI que les consoles s'alignent sur 2 colonnes, uniquement sur grand écran */
+    .mg-console-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+    
+    .console-top {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+/* ================= TRÈS GRANDS ÉCRANS : PC BUREAU (A PARTIR DE 1024px) ================= */
+@media (min-width: 1024px) {
+    .mg-header, .mg-day-card, .mg-stats, .mg-section {
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Les statistiques passent sur 4 colonnes */
+    .mg-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .mg-bottom-nav {
+        display: none; /* Cache la barre mobile du bas */
+    }
+}

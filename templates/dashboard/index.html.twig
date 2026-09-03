@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css1/dashboard.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="mg-dashboard">
+
+    {# ================= HEADER ================= #}
+    <header class="mg-header">
+        <div>
+            <div class="mg-brand">
+                <span class="mg-logo">🎮</span>
+                <span>MAX <strong>GAMING</strong></span>
+            </div>
+            <p class="mg-welcome">
+                Bonjour {{ app.user.nom ?? 'Admin' }} 👋
+            </p>
+        </div>
+
+        <div class="mg-header-actions">
+            <button class="mg-icon-btn" title="Notifications">
+                <i class="bi bi-bell"></i>
+                <span class="notification-dot"></span>
+            </button>
+            <button class="mg-avatar">
+                {{ (app.user.nom ?? 'A')|first|upper }}
+            </button>
+        </div>
+    </header>
+
+    {# ================= JOURNÉE ================= #}
+    <section class="mg-day-card">
+        <div class="mg-day-info">
+            <div class="mg-day-label">
+                <span class="status-dot"></span>
+                JOURNÉE OUVERTE
+            </div>
+            <h2>Jeudi 03 Septembre 2026</h2>
+            <p><i class="bi bi-clock"></i> Ouverte depuis 08:30</p>
+        </div>
+        <button class="mg-close-day">
+            Fermer la journée
+        </button>
+    </section>
+
+    {# ================= STATISTIQUES ================= #}
+    <section class="mg-stats">
+        <div class="mg-stat-card">
+            <div class="mg-stat-icon revenue"><i class="bi bi-cash-stack"></i></div>
+            <div class="mg-stat-content"><span>Revenus</span><strong>8 500 FCFA</strong></div>
+        </div>
+
+        <div class="mg-stat-card">
+            <div class="mg-stat-icon expense"><i class="bi bi-wallet2"></i></div>
+            <div class="mg-stat-content"><span>Dépenses</span><strong>2 000 FCFA</strong></div>
+        </div>
+
+        <div class="mg-stat-card">
+            <div class="mg-stat-icon profit"><i class="bi bi-graph-up-arrow"></i></div>
+            <div class="mg-stat-content"><span>Bénéfice</span><strong>6 500 FCFA</strong></div>
+        </div>
+
+        <div class="mg-stat-card">
+            <div class="mg-stat-icon sessions"><i class="bi bi-controller"></i></div>
+            <div class="mg-stat-content"><span>Sessions</span><strong>12</strong></div>
+        </div>
+    </section>
+
+    {# ================= CONSOLES ================= #}
+    <section class="mg-section">
+        <div class="mg-section-title">
+            <div>
+                <span class="mg-overline">GESTION</span>
+                <h2>Mes consoles</h2>
+            </div>
+            <a href="#" class="mg-see-all">Gérer <i class="bi bi-arrow-right"></i></a>
+        </div>
+
+        <div class="mg-console-grid">
+            {# CONSOLE EN COURS #}
+            <div class="mg-console-card playing">
+                <div class="console-top">
+                    <div class="console-name">
+                        <div class="console-icon"><i class="bi bi-controller"></i></div>
+                        <div>
+                            <h3>PS1</h3>
+                            <span class="console-type">PlayStation</span>
+                        </div>
+                    </div>
+                    <span class="console-status playing-status">En jeu</span>
+                </div>
+                <div class="timer-container">
+                    <span>Temps restant</span>
+                    <strong>42:15</strong>
+                    <div class="timer-progress"><div style="width: 70%;"></div></div>
+                </div>
+                <div class="console-footer">
+                    <div><small>Montant actuel</small><strong>500 FCFA</strong></div>
+                    <button class="mg-action-btn">Voir <i class="bi bi-arrow-right"></i></button>
+                </div>
+            </div>
+
+            {# CONSOLE LIBRE #}
+            <div class="mg-console-card available">
+                <div class="console-top">
+                    <div class="console-name">
+                        <div class="console-icon"><i class="bi bi-controller"></i></div>
+                        <div>
+                            <h3>PS2</h3>
+                            <span class="console-type">PlayStation</span>
+                        </div>
+                    </div>
+                    <span class="console-status available-status">Disponible</span>
+                </div>
+                <div class="available-content">
+                    <i class="bi bi-play-circle"></i>
+                    <h4>Console disponible</h4>
+                    <p>Prête pour une nouvelle session</p>
+                </div>
+                <button class="mg-start-btn"><i class="bi bi-play-fill"></i> Démarrer une session</button>
+            </div>
+        </div>
+    </section>
+
+    {# ================= BILAN RAPIDE ================= #}
+    <section class="mg-section">
+        <div class="mg-section-title">
+            <div>
+                <span class="mg-overline">FINANCES</span>
+                <h2>Bilan du jour</h2>
+            </div>
+            <a href="#" class="mg-see-all">Détails <i class="bi bi-arrow-right"></i></a>
+        </div>
+
+        <div class="mg-finance-card">
+            <div class="finance-item">
+                <span><i class="bi bi-arrow-down-circle"></i> Revenus</span>
+                <strong>+8 500 FCFA</strong>
+            </div>
+            <div class="finance-item">
+                <span><i class="bi bi-arrow-up-circle"></i> Dépenses</span>
+                <strong>-2 000 FCFA</strong>
+            </div>
+            <div class="finance-item">
+                <span><i class="bi bi-person"></i> Retraits</span>
+                <strong>-1 000 FCFA</strong>
+            </div>
+            <div class="finance-total">
+                <span>Argent disponible</span>
+                <strong>5 500 FCFA</strong>
+            </div>
+        </div>
+    </section>
+
+    {# ================= NAVIGATION MOBILE ================= #}
+    <nav class="mg-bottom-nav">
+        <a href="#" class="active"><i class="bi bi-house-fill"></i><span>Accueil</span></a>
+        <a href="#"><i class="bi bi-controller"></i><span>Sessions</span></a>
+        <a href="#"><i class="bi bi-wallet2"></i><span>Finances</span></a>
+        <a href="#"><i class="bi bi-bar-chart-fill"></i><span>Bilans</span></a>
+    </nav>
+
+</div>
+{% endblock %}

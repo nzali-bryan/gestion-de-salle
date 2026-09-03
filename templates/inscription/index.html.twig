@@ -16,7 +16,13 @@
     </div>
     <div class="mb-3">
         {{ form_label(form.email) }}
-        {{ form_widget(form.email, {'label': 'Email','attr': {'class': 'form-control form_control'}}) }}
+    {{ form_widget(form.email, {
+        'attr': {
+            'class': 'form-control',
+            'type': 'email',
+            'required': true
+        }
+    }) }}
         {{ form_errors(form.email) }}
     </div>
 
@@ -28,11 +34,33 @@
 
     <div class="mb-3">
         {{ form_label(form.password) }}
-        {{ form_widget(form.password, {'attr': {'class': 'form-control form_control'}}) }}
+        <div class="input-group">
+
+            {{ form_widget(form.password, { 'attr': {'class': 'form-control' , 'id': 'password'}}) }}
+{# 
+            <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                👁️
+            </button> #}
+        </div>
         {{ form_errors(form.password) }}
     </div>
 
     <button class="btn btn-primary">Créer un Compte</button>
 
     {{ form_end(form) }}
+
+    <script>
+    const password = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+
+    togglePassword.addEventListener('click', function () {
+        if (password.type === 'password') {
+            password.type = 'text';
+            togglePassword.textContent = '🙈';
+        } else {
+            password.type = 'password';
+            togglePassword.textContent = '👁️';
+        }
+    });
+</script>
 {% endblock %}

@@ -37,6 +37,9 @@ class Console
     #[ORM\OneToMany(targetEntity: SessionsJeu::class, mappedBy: 'Console')]
     private Collection $sessionsJeus;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Statut = null;
+
     public function __construct()
     {
         $this->sessionsJeus = new ArrayCollection();
@@ -136,6 +139,18 @@ class Console
                 $sessionsJeu->setConsole(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->Statut;
+    }
+
+    public function setStatut(?string $Statut): static
+    {
+        $this->Statut = $Statut;
 
         return $this;
     }

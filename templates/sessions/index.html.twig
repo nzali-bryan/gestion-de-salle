@@ -60,12 +60,12 @@
     {# ================= 3. FILTRES RAPIDES MOBILE ================= #}
     <div class="container-fluid px-3 mb-4">
         <div class="d-flex gap-2 overflow-x-auto pb-1" style="scrollbar-width: none; -webkit-overflow-scrolling: touch;">
-            <button class="btn btn-primary rounded-pill px-4 btn-sm fw-semibold flex-shrink-0">Toutes (4)</button>
+            <button class="btn btn-primary rounded-pill px-4 btn-sm fw-semibold flex-shrink-0">Toutes ({{totalConsole }})</button>
             <button class="btn btn-outline-secondary border-0 bg-white shadow-sm rounded-pill px-3 btn-sm fw-semibold flex-shrink-0 text-dark">
-                <span class="badge bg-danger-subtle text-danger me-1">2</span> En cours
+                <span class="badge bg-danger-subtle text-danger me-1"> {{ totalEnJeu }} </span> En Jeu
             </button>
             <button class="btn btn-outline-secondary border-0 bg-white shadow-sm rounded-pill px-3 btn-sm fw-semibold flex-shrink-0 text-dark">
-                <span class="badge bg-success-subtle text-success me-1">2</span> Libres
+                <span class="badge bg-success-subtle text-success me-1"> {{totalLibre }} </span> Libres
             </button>
         </div>
     </div>
@@ -75,6 +75,8 @@
         <div class="row g-3">
 
             {# --- CARTE CONSOLE 1 : EN COURS (SIMULATION CHRONO) --- #}
+        {% for Console in Consoles %}
+            {% if Console.statut === 'En jeu' %}
             <div class="col-12">
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
                     <div class="card-body p-3">
@@ -85,7 +87,8 @@
                                     <i class="bi bi-controller"></i>
                                 </div>
                                 <div>
-                                    <h5 class="fw-bold mb-0 text-dark">PS4 - Zone A</h5>
+                                    <h5 class="fw-bold mb-0 text-dark"> {{Console.nom }} </h5>
+                                    <h6 class=" fw-semibold mb-0 text-dark">{{Console.type}}</h6>
                                     <span class="badge bg-danger-subtle text-danger rounded-pill px-2.5 py-1">En jeu</span>
                                 </div>
                             </div>
@@ -120,7 +123,7 @@
                     </div>
                 </div>
             </div>
-
+        {% else %}
             {# --- CARTE CONSOLE 2 : DISPONIBLE (LANCEMENT DE SESSION) --- #}
             <div class="col-12">
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
@@ -132,43 +135,45 @@
                                     <i class="bi bi-controller"></i>
                                 </div>
                                 <div>
-                                    <h5 class="fw-bold mb-0 text-dark">PS5 Pro</h5>
+                                    <h5 class="fw-bold mb-0 text-dark">{{Console.nom}}</h5>
+                                <h6 class=" fw-semibold mb-0 text-dark">{{Console.type}}</h6>
                                     <span class="badge bg-success-subtle text-success rounded-pill px-2.5 py-1">Disponible</span>
                                 </div>
                             </div>
                             <i class="bi bi-play-circle-fill text-success fs-3"></i>
                         </div>
 
-                        <!-- Formulaire de démarrage rapide -->
-                        <form action="#" method="POST" class="mt-2">
-                            <!-- Alignement de deux champs sur la même ligne (row g-2) -->
-                            <div class="row g-2 mb-3">
-                                <div class="col-6">
-                                    <label class="form-label small fw-bold text-muted mb-1">Durée</label>
-                                    <select class="form-select bg-light border-0 rounded-3 py-2 text-dark fw-medium">
-                                        <option value="30">30 minutes</option>
-                                        <option value="60" selected>1 heure</option>
-                                        <option value="120">2 heures</option>
-                                        <option value="0">À la seconde (∞)</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label small fw-bold text-muted mb-1">Type Tarif</label>
-                                    <select class="form-select bg-light border-0 rounded-3 py-2 text-dark fw-medium">
-                                        <option value="solo">Solo</option>
-                                        <option value="versus">Versus (+)</option>
-                                    </select>
-                                </div>
-                            </div>
+                                {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+
+                                    <div class="mb-3">
+                                        {{ form_label(form.duree) }}
+                                        {{ form_widget(form.duree, {'attr': {'class': 'form_control form-select bg-light border-0 rounded-3 py-2 text-dark fw-medium'}}) }}
+                                        {{ form_errors(form.duree) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(form.montant) }}
+                                    {{ form_widget(form.montant,{'attr': {'placeholder':'---FCFA','class': 'form_control border-1 rounded-3 py-2 text-dark fw-medium w-100'}}) }}
+                                        {{ form_errors(form.montant) }}
+                                    </div>
+                                        {{ form_widget(form.Console, {
+                                            'value': Console.id, 
+                                            'attr': {'style': 'display: none;'}
+                                        }) }}
+
+
 
                             <button type="submit" class="btn btn-success w-100 py-2.5 rounded-3 fw-bold shadow-sm">
                                 <i class="bi bi-lightning-charge-fill me-1"></i> Lancer la session
                             </button>
+
+                                {{ form_end(form) }}
+
                         </form>
                     </div>
                 </div>
             </div>
-
+        {% endif %}
+    {% endfor %}
         </div>
     </div>
 

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SessionsJeuRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SessionsJeuRepository::class)]
@@ -16,10 +17,10 @@ class SessionsJeu
     #[ORM\Column]
     private ?int $duree = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::TIME_MUTABLE, )]
     private ?\DateTime $debut = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::TIME_MUTABLE,)]
     private ?\DateTime $fin = null;
 
     #[ORM\Column(length: 255)]
@@ -34,6 +35,9 @@ class SessionsJeu
 
     #[ORM\ManyToOne(inversedBy: 'sessionsJeus')]
     private ?Console $Console = null;
+
+    // #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    // private ?\DateTime $arra = null;
 
     public function getId(): ?int
     {
@@ -123,4 +127,6 @@ class SessionsJeu
 
         return $this;
     }
+
+
 }

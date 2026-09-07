@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la console{% endblock %}
+
+{% block body %}
+<div class="container my-5" style="max-width: 800px;">
+    <!-- Bouton Retour rapide -->
+    <div class="mb-4">
+        <a href="{{ path('app_console_index') }}" class="btn btn-link text-decoration-none p-0 d-inline-flex align-items-center text-muted hover-primary">
+            ← Retour à la liste
+        </a>
+    </div>
+
+    <!-- Carte principale du Formulaire -->
+    <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+        <div class="card-header bg-light border-bottom p-4">
+            <h1 class="h3 mb-0 fw-bold text-dark">Modifier la console</h1>
+            <p class="text-muted small mb-0 mt-1">Mettez à jour les informations et les tarifs de cet équipement.</p>
+        </div>
+        
+        <div class="card-body p-4">
+
+            {{ include('console/_form.html.twig', {'button_label': 'Enregistrer les modifications'}) }}
+        </div>
+
+        
+
+    </div>
+</div>
+{% endblock %}
+

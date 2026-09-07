@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+
+
+{% block body %}
+    <h1>Console</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ console.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ console.nom }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ console.type }}</td>
+            </tr>
+            <tr>
+                <th>TarifHeure</th>
+                <td>{{ console.tarifHeure }}</td>
+            </tr>
+            <tr>
+                <th>TarifMinute</th>
+                <td>{{ console.tarif15min }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ console.createdAt ? console.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_console_index') }}">Voir les consoles</a>
+
+    <a href="{{ path('app_console_edit', {'id': console.id}) }}">Modifier</a>
+
+    {{ include('console/_delete_form.html.twig') }}
+{% endblock %}

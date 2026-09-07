@@ -1,0 +1,31 @@
+{{ form_start(form) }}
+    
+    <div class="row g-3 mb-3">
+        <div class="col-md-6 col-sm-12">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom, {'attr': {'class': 'form_control w-100'}}) }}
+            {{ form_errors(form.nom) }}
+        </div>
+        <div class="col-md-6 col-sm-12">
+            {{ form_label(form.type) }}
+            {{ form_widget(form.type,{'attr': {'placeholder':'PlayStation , Xbox','class': 'form_control w-100'}}) }}
+            {{ form_errors(form.type) }}
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-6 col-sm-12">
+            {{ form_label(form.tarifHeure) }}
+            {{ form_widget(form.tarifHeure, {'label': 'Tarif Heure (FCFA)','attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.tarifHeure) }}
+        </div>
+        <div class="col-md-6 col-sm-12">
+            {{ form_label(form.tarif15min) }}
+            {{ form_widget(form.tarif15min, {'label': 'Tarif Minute (15MIN/FCFA)','attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.tarif15min) }}
+        </div>
+    </div>
+
+
+    <button class="my-3 btn btn-primary w-100">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

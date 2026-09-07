@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<div class="container my-5">
+    <!-- En-tête de la page -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <h1 class="h2 text-dark mb-0 fw-bold">Liste des Consoles</h1>
+        <a href="{{ path('app_console_new') }}" class="btn btn-primary d-inline-flex align-items-center justify-content-center">
+            <i class="bi bi-plus-lg me-2"></i> Nouvelle Console
+        </a>
+    </div>
+
+ 
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-secondary text-uppercase fs-7 border-bottom">
+                    <tr>
+                        
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Tarif/Heure</th>
+                        <th>Tarif/15 min</th>
+                        <th>Created At</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for console in consoles %}
+                    <tr>
+                        
+                        <td class="fw-bold text-dark">{{ console.nom }}</td>
+                        <td>
+                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2.5 py-1.5 rounded">
+                                {{ console.type }}
+                            </span>
+                        </td>
+                        <td class="text-success fw-medium">{{ console.tarifHeure }} FCFA</td>
+                        <td class="text-success fw-medium">{{ console.tarif15min }} FCFA</td>
+                        <td class="text-muted fs-7">
+                            {{ console.createdAt ? console.createdAt|date('Y-m-d H:i:s') : 'N/A' }}
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="btn-group btn-group-sm" role="group">
+                                {{ include('console/_delete_form.html.twig') }}
+                                {# <a href="{{ path('app_console_delete', {'id': console.id}) }}" class="btn btn-outline-danger px-3" title="Show">
+                                    Supprimer
+                                </a> #}
+                                <a href="{{ path('app_console_edit', {'id': console.id}) }}" class="btn btn-outline-primary px-3" title="Edit">
+                                    Modifier
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <div class="d-flex flex-column align-items-center">
+                                <span class="fs-4 mb-2">📂</span>
+                                <p class="mb-0 fw-medium">Aucune console crée</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

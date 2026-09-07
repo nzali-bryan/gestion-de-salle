@@ -12,7 +12,7 @@
     padding: 16px;
     padding-bottom: 95px; /* Espace pour la barre mobile du bas */
     font-family: system-ui, -apple-system, sans-serif;
-    -webkit-text-size-adjust: 100%;
+    /* -webkit-text-size-adjust: 100%; */
 }
 
 /* ================= COMPORTEMENT UNIQUE POUR TOUS LES TÉLÉPHONES (JUSQU'À 767px) ================= */
@@ -413,4 +413,41 @@
     .mg-bottom-nav {
         display: none; /* Cache la barre mobile du bas */
     }
+}
+
+/* ================= ANIMATIONS D'ENTRÉE FLUIDES ================= */
+@keyframes apparitionDouce {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* On applique l'animation sur les grands blocs */
+.mg-header, 
+.mg-day-card, 
+.mg-stats, 
+.mg-section {
+    animation: apparitionDouce 0.5s cubic-bezier(0.1, 1, 0.1, 1) both;
+}
+
+/* Légers décalages pour un effet cascade professionnel */
+.mg-day-card { animation-delay: 0.1s; }
+.mg-stats { animation-delay: 0.2s; }
+.mg-section { animation-delay: 0.3s; }
+
+/* Animation de pulsation sur l'icône de la console libre */
+@keyframes pulsation {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+.available-content i {
+    display: inline-block;
+    animation: pulsation 2s infinite ease-in-out;
 }

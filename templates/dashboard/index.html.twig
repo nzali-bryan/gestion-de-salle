@@ -5,6 +5,12 @@
     <link rel="stylesheet" href="{{ asset('css1/dashboard.css') }}">
 {% endblock %}
 
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js1/dashboard.js') }}"></script>
+{% endblock %}
+
 {% block body %}
 <div class="mg-dashboard">
 

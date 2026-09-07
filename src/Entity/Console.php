@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ConsoleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ConsoleRepository::class)]
@@ -28,6 +30,17 @@ class Console
 
     #[ORM\Column(nullable: true)]
     private ?int $tarif15min = null;
+
+    /**
+     * @var Collection<int, SessionsJeu>
+     */
+    #[ORM\OneToMany(targetEntity: SessionsJeu::class, mappedBy: 'Console')]
+    private Collection $sessionsJeus;
+
+    public function __construct()
+    {
+        $this->sessionsJeus = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -93,6 +106,36 @@ class Console
     public function setTarif15min(?int $tarif15min): static
     {
         $this->tarif15min = $tarif15min;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SessionsJeu>
+     */
+    public function getSessionsJeus(): Collection
+    {
+        return $this->sessionsJeus;
+    }
+
+    public function addSessionsJeu(SessionsJeu $sessionsJeu): static
+    {
+        if (!$this->sessionsJeus->contains($sessionsJeu)) {
+            $this->sessionsJeus->add($sessionsJeu);
+            $sessionsJeu->setConsole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionsJeu(SessionsJeu $sessionsJeu): static
+    {
+        if ($this->sessionsJeus->removeElement($sessionsJeu)) {
+            // set the owning side to null (unless already changed)
+            if ($sessionsJeu->getConsole() === $this) {
+                $sessionsJeu->setConsole(null);
+            }
+        }
 
         return $this;
     }

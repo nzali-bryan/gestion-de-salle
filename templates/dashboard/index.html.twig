@@ -44,12 +44,15 @@
                 <span class="status-dot"></span>
                 JOURNÉE OUVERTE
             </div>
-            <h2>Jeudi 03 Septembre 2026</h2>
-            <p><i class="bi bi-clock"></i> Ouverte depuis 08:30</p>
+            <h2>{{ journee.date|format_date(locale='fr', pattern='dd MMMM yyyy') }}</h2>
+            <p><i class="bi bi-clock"></i> Ouverte depuis {{ journee.createdAt|date('H:i') }}</p>
         </div>
-        <button class="mg-close-day">
+        {# <button class="mg-close-day">
             Fermer la journée
-        </button>
+        </button> #}
+        <a href="{{ path('close_journee', {'id': journee.id}) }}" class="mg-close-day">
+            Fermer la journée
+        </a>
     </section>
 
     {# ================= STATISTIQUES ================= #}
@@ -163,8 +166,8 @@
 
     {# ================= NAVIGATION MOBILE ================= #}
     <nav class="mg-bottom-nav">
-        <a href="#" class="active"><i class="bi bi-house-fill"></i><span>Accueil</span></a>
-        <a href="#"><i class="bi bi-controller"></i><span>Sessions</span></a>
+        <a href="{{path('accueil')}}" class="active"><i class="bi bi-house-fill"></i><span>Accueil</span></a>
+        <a href="{{path('sessions')}}"><i class="bi bi-controller"></i><span>Sessions</span></a>
         <a href="#"><i class="bi bi-wallet2"></i><span>Finances</span></a>
         <a href="#"><i class="bi bi-bar-chart-fill"></i><span>Bilans</span></a>
     </nav>

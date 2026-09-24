@@ -115,9 +115,12 @@
                                 </button>
                             </div>
                             <div class="col-6">
-                                <button class="btn btn-danger w-100 py-2.5 rounded-3 fw-bold btn-sm">
+                                <a href="{{path ('close_console',{'id':Console.id})}}" class="btn btn-danger w-100 py-2.5 rounded-3 fw-bold btn-sm">
                                     <i class="bi bi-stop-fill me-1"></i> Arrêter
-                                </button>
+                                </a>
+                                {# <button class="btn btn-danger w-100 py-2.5 rounded-3 fw-bold btn-sm">
+                                    
+                                </button> #}
                             </div>
                         </div>
                     </div>
@@ -148,7 +151,7 @@
                                     <div class="mb-3">
                                         {{ form_label(form.duree) }}
                                         {{ form_widget(form.duree, {'attr': {'class': 'form_control form-select bg-light border-0 rounded-3 py-2 text-dark fw-medium'}}) }}
-                                        {{ form_errors(form.duree) }}
+                                        {{ form_errors(form.duree) }} 
                                     </div>
                                     <div class="mb-3">
                                         {{ form_label(form.montant) }}

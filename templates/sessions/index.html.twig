@@ -92,27 +92,105 @@
                                     <span class="badge bg-danger-subtle text-danger rounded-pill px-2.5 py-1">En jeu</span>
                                 </div>
                             </div>
+                            {# Je recupère la derbière session qui correspont à la console  #}
+                            {% set derniereSession = Console.sessionsJeus|last %}
                             <div class="text-end">
+                        
                                 <span class="text-muted d-block small">Montant</span>
-                                <strong class="text-dark fs-5">1 200 FCFA</strong>
+                                <turbo-frame id="frame_session_{{ derniereSession.id }}">
+                                    <strong class="text-dark fs-5">{{derniereSession.montant}}</strong>
+                                </turbo-frame>
                             </div>
                         </div>
 
-                        <!-- Timer section -->
-                        <div class="bg-light rounded-3 p-3 text-center mb-3">
-                            <span class="text-muted small text-uppercase fw-semibold tracking-wider">Temps restant</span>
-                            <div class="display-5 fw-bold text-dark my-1 tracking-tight">24:18</div>
-                            <div class="progress bg-secondary-subtle rounded-pill" style="height: 6px;">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger rounded-pill" role="progressbar" style="width: 45%"></div>
-                            </div>
-                        </div>
+
+
+<div class="bg-light rounded-3 p-3 text-center mb-3 session-timer" 
+     data-date-debut="{{ derniereSession.debut|date('H:i:s') }}" 
+     data-date-fin="{{ derniereSession.fin|date('H:i:s') }}"
+     data-console-nom= "{{Console.nom}}">
+    
+    <span class="text-muted small text-uppercase fw-semibold tracking-wider">Temps restant</span>
+    <div class="display-5 fw-bold text-dark my-1 tracking-tight countdown-display">--:--</div>
+    
+    <div class="progress bg-secondary-subtle rounded-pill" style="height: 6px;">
+        <div class="progress-bar progress-bar-display progress-bar-striped progress-bar-animated bg-danger rounded-pill" role="progressbar" style="width: 0%"></div>
+    </div>
+</div>
+
+<script>
+     // script pour afficher le teps restant en temps réel
+document.addEventListener("DOMContentLoaded", function () {
+    function updateTimers() {
+        document.querySelectorAll('.session-timer').forEach(timer => {
+            const debutStr = timer.getAttribute('data-date-debut');
+            const finStr = timer.getAttribute('data-date-fin');
+            if (!debutStr || !finStr) return;
+
+            const now = new Date();
+            
+            // Fonction express pour transformer "HH:MM:SS" en vraie Date du jour
+            const createDate = (timeStr) => {
+                const [h, m, s] = timeStr.split(':').map(Number);
+                return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s);
+            };
+
+            const debut = createDate(debutStr);
+            let fin = createDate(finStr);
+
+            // Gestion du passage à minuit (ex: session de 23h à 01h)
+            if (fin < debut) fin.setDate(fin.getDate() + 1);
+
+            const tempsTotal = fin - debut;
+            const tempsRestant = fin - now;
+            const displayEl = timer.querySelector('.countdown-display');
+            const progressEl = timer.querySelector('.progress-bar-display');
+
+            // 1. Session terminée
+            if (tempsRestant <= 0) {
+                if (displayEl) {
+                    displayEl.innerHTML = "Terminé !";
+                    displayEl.classList.replace('text-dark', 'text-danger');
+                }
+                if (progressEl) {
+                    progressEl.style.width = "100%";
+                    progressEl.classList.remove('progress-bar-animated');
+                }
+                return;
+            }
+
+            // 2. Remplissage de la barre (Progression croissante de 0% à 100%)
+            if (progressEl && tempsTotal > 0) {
+                const progression = 100 - ((tempsRestant / tempsTotal) * 100);
+                progressEl.style.width = Math.max(0, progression) + "%";
+            }
+
+            // 3. Calcul du format HH:MM:SS
+            const h = Math.floor(tempsRestant / 3600000);
+            const m = Math.floor((tempsRestant % 3600000) / 60000);
+            const s = Math.floor((tempsRestant % 60000) / 1000);
+
+            // Formatage propre : ajoute un zéro devant si < 10
+            const pad = (n) => String(n).padStart(2, '0');
+            
+            if (displayEl) {
+                displayEl.innerHTML = h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+            }
+        });
+    }
+
+    updateTimers();
+    setInterval(updateTimers, 1000);
+});
+</script>
+
 
                         <!-- Actions rapides sur Mobile -->
                         <div class="row g-2">
                             <div class="col-6">
-                                <button class="btn btn-outline-primary w-100 py-2.5 rounded-3 fw-bold btn-sm">
+                                <a href="{{path ('add_time',{'id':Console.id} )}}" class="btn btn-outline-primary w-100 py-2.5 rounded-3 fw-bold btn-sm">
                                     <i class="bi bi-plus-circle me-1"></i> +15 min
-                                </button>
+                                </a>
                             </div>
                             <div class="col-6">
                                 <a href="{{path ('close_console',{'id':Console.id})}}" class="btn btn-danger w-100 py-2.5 rounded-3 fw-bold btn-sm">
@@ -145,20 +223,22 @@
                             </div>
                             <i class="bi bi-play-circle-fill text-success fs-3"></i>
                         </div>
-
-                                {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+                        {# pour recuperer le formulaire de la console  #}
+                        {# {% set consoleId =  console.id  %} #}
+                                {% set Form = forms[Console.id] %}
+                                {{ form_start(Form, {'attr': {'data-turbo': 'false'}}) }}
 
                                     <div class="mb-3">
-                                        {{ form_label(form.duree) }}
-                                        {{ form_widget(form.duree, {'attr': {'class': 'form_control form-select bg-light border-0 rounded-3 py-2 text-dark fw-medium'}}) }}
-                                        {{ form_errors(form.duree) }} 
+                                        {{ form_label(Form.duree) }}
+                                        {{ form_widget(Form.duree, {'attr': {'class': 'form_control form-select bg-light border-0 rounded-3 py-2 text-dark fw-medium'}}) }}
+                                        {{ form_errors(Form.duree) }} 
                                     </div>
                                     <div class="mb-3">
-                                        {{ form_label(form.montant) }}
-                                    {{ form_widget(form.montant,{'attr': {'placeholder':'---FCFA','class': 'form_control border-1 rounded-3 py-2 text-dark fw-medium w-100'}}) }}
-                                        {{ form_errors(form.montant) }}
+                                        {{ form_label(Form.montant) }}
+                                    {{ form_widget(Form.montant,{'attr': {'placeholder':'---FCFA','class': 'form_control border-1 rounded-3 py-2 text-dark fw-medium w-100'}}) }}
+                                        {{ form_errors(Form.montant) }}
                                     </div>
-                                        {{ form_widget(form.Console, {
+                                        {{ form_widget(Form.Console, {
                                             'value': Console.id, 
                                             'attr': {'style': 'display: none;'}
                                         }) }}
@@ -169,7 +249,7 @@
                                 <i class="bi bi-lightning-charge-fill me-1"></i> Lancer la session
                             </button>
 
-                                {{ form_end(form) }}
+                                {{ form_end(Form) }}
 
                         </form>
                     </div>

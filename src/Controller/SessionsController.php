@@ -31,19 +31,15 @@ final class SessionsController extends AbstractController
         // On crée un formulaire unique pour cette console
         // 'form_console_' . $console->getId() permet de donner un nom unique au formulaire en POST
 
-            $form = $this->createForm(SessionsType::class, $sessions);
-            $form->handleRequest($request);
             $form=$this->container->get('form.factory')->createNamed('form_console_' . $console->getId(), SessionsType::class, $sessions);
-        }
+            $form->handleRequest($request);
 
-
-
-
-        if ($form->isSubmitted() && $form->isValid()) {
+            // mes conditions de la session
+            if ($form->isSubmitted() && $form->isValid()) {
             $dureeEnMinutes = $form->get('duree')->getData();
+
             // pour savoir a quel l'heure finis la sessions 
             $fin = $debut->modify('+' . $dureeEnMinutes . ' minutes');
-            // dd($fin);
             $sessions->setFin($fin);
             $sessions->setStatut('active');
             $sessions->setDebut(new \DateTime());
@@ -51,23 +47,23 @@ final class SessionsController extends AbstractController
             $entityManager->persist($sessions);
             $entityManager->flush();
             $console = $sessions->getConsole();
-            // dd($console);
+
             // changer l'état de la console après avoir crée une session
             if ($console) {
                 $console->setStatut('En jeu'); 
-                $entityManager->persist($console); 
             }
             $entityManager->persist($console);
             $entityManager->flush();
-            
-
             return $this->redirectToRoute('sessions', [], Response::HTTP_SEE_OTHER);
         }
-        
+        // stockage du formulaire avec l'Id de la console pour qui va aider dans le twig
+        $forms[$console->getId()] = $form->createView();
+
+        }
+
         // le nombre de console en jeu et
         $aujourdhui = new \DateTimeImmutable('today');
         $statut=$derniereJournee->isStatut();
-        $console=$consoleRepository->findAll();
         $totalConsole=$consoleRepository->count([]);
         $totalEnJeu = $consoleRepository->count(['Statut' => 'En jeu']);
         $totalLibre = $consoleRepository->count(['Statut' => 'Libre']);
@@ -75,18 +71,17 @@ final class SessionsController extends AbstractController
         $DejaOuvert = false;
         if ($derniereJournee && $derniereJournee->getDate()->format('Y-m-d') === $aujourdhui->format('Y-m-d') && $statut===true) {
             $DejaOuvert = true;
-            // dd($derniereJournee,$statut);
         }
 
-
+        // dump($consoles);
         return $this->render('sessions/index.html.twig', [
             'journee' => $derniereJournee,
             'DejaOuvert'=>$DejaOuvert,
-            'Consoles'=>$console,
+            'Consoles'=>$consoles,
             'totalConsole'=>$totalConsole,
             'totalEnJeu'=>$totalEnJeu,
             'totalLibre'=>$totalLibre,
-            'form'=>$form,
+            'forms'=>$forms,
         ]);
     }
     #[Route('/new_journee', name:'new_journee')]
@@ -123,15 +118,15 @@ final class SessionsController extends AbstractController
         #[Route('/close_console/{id}', name:'close_console')]
     public function closeSessions(Request $request,Console $console,SessionsJeuRepository $sessionsJeuRepository, EntityManagerInterface $entityManager)
     {
-        // ça regarde la dernière session active
+        // ça regarde la derniere session active
         $derniereSession = $sessionsJeuRepository->findOneBy(
         ['Console' => $console],
-        ['id' => 'DESC']         // Tri : par ID décroissant
+        ['id' => 'DESC']         
     );
 
         // dd($derniereSession);
         if ($derniereSession){
-            $derniereSession->setStatut('Libre');
+            $derniereSession->setStatut('Fermer');
             $console=$derniereSession->getConsole();
             $console->setStatut('Libre');
             $entityManager->persist($derniereSession);
@@ -140,6 +135,31 @@ final class SessionsController extends AbstractController
         }
 
 
+        return $this->redirectToRoute('sessions', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('add_time/{id}' , name:'add_time')]
+    public function AddTime(Request $request, Console $console, ConsoleRepository $consoleRepository, EntityManagerInterface $entityManager,sessionsJeuRepository $sessionsJeuRepository):Response
+    {
+
+        $derniereSession = $sessionsJeuRepository->findOneBy(
+        ['Console' => $console],
+        ['id' => 'DESC']         
+    );
+    
+            if ($derniereSession){
+
+            // clone est un attribut très important sur symfony car quand tu utilise le date time si tu ne fais pas ça le Flush ne va pas marcher 
+            $heureFin= clone $derniereSession->getFin();
+            $heureFin=$heureFin->modify('+'. 15 .' minutes');
+            $derniereSession->setFin($heureFin);
+
+            // maintenant je j'augmente l'argent
+            $argentSession=$derniereSession->getMontant();
+            $argentSession=$argentSession + $console->getTarif15min();
+            $derniereSession->setMontant($argentSession);
+            $entityManager->persist($derniereSession);
+            $entityManager->flush();
+        }
         return $this->redirectToRoute('sessions', [], Response::HTTP_SEE_OTHER);
     }
 }

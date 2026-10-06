@@ -69,7 +69,7 @@ final class SessionsController extends AbstractController
         $totalLibre = $consoleRepository->count(['Statut' => 'Libre']);
          
         $DejaOuvert = false;
-        if ($derniereJournee && $derniereJournee->getDate()->format('Y-m-d') === $aujourdhui->format('Y-m-d') && $statut===true) {
+        if ($derniereJournee && $statut===true) {
             $DejaOuvert = true;
         }
 

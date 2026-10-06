@@ -118,6 +118,89 @@
         <div class="progress-bar progress-bar-display progress-bar-striped progress-bar-animated bg-danger rounded-pill" role="progressbar" style="width: 0%"></div>
     </div>
 </div>
+                        <!-- Actions rapides sur Mobile -->
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <a href="{{path ('add_time',{'id':Console.id} )}}" class="btn btn-outline-primary w-100 py-2.5 rounded-3 fw-bold btn-sm">
+                                    <i class="bi bi-plus-circle me-1"></i> +15 min
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{{path ('close_console',{'id':Console.id})}}" class=" btn-arreter btn btn-danger w-100 py-2.5 rounded-3 fw-bold btn-sm">
+                                    <i class="bi bi-stop-fill me-1"></i> Arrêter
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {# --- CARTE CONSOLE 2 : DISPONIBLE (LANCEMENT DE SESSION) --- #}
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                    <div class="card-body p-3">
+                        <!-- Top Card -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-secondary-subtle text-secondary rounded-3 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; font-size: 1.3rem;">
+                                    <i class="bi bi-controller"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-0 text-dark">{{Console.nom}}</h5>
+                                <h6 class=" fw-semibold mb-0 text-dark">{{Console.type}}</h6>
+                                    <span class="badge bg-success-subtle text-success rounded-pill px-2.5 py-1">Disponible</span>
+                                </div>
+                            </div>
+                            <i class="bi bi-play-circle-fill text-success fs-3"></i>
+                        </div>
+                        {# pour recuperer le formulaire de la console  #}
+                        {# {% set consoleId =  console.id  %} #}
+                                {% set Form = forms[Console.id] %}
+                                {{ form_start(Form, {'attr': {'data-turbo': 'true'}}) }}
+
+                                    <div class="mb-3">
+                                        {{ form_label(Form.duree) }}
+                                        {{ form_widget(Form.duree, {'attr': {'class': 'form_control form-select bg-light border-0 rounded-3 py-2 text-dark fw-medium'}}) }}
+                                        {{ form_errors(Form.duree) }} 
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(Form.montant) }}
+                                    {{ form_widget(Form.montant,{'attr': {'placeholder':'---FCFA','class': 'form_control border-1 rounded-3 py-2 text-dark fw-medium w-100'}}) }}
+                                        {{ form_errors(Form.montant) }}
+                                    </div>
+                                        {{ form_widget(Form.Console, {
+                                            'value': Console.id, 
+                                            'attr': {'style': 'display: none;'}
+                                        }) }}
+
+
+
+                            <button type="submit" class="btn btn-success w-100 py-2.5 rounded-3 fw-bold shadow-sm">
+                                <i class="bi bi-lightning-charge-fill me-1"></i> Lancer la session
+                            </button>
+
+                                {{ form_end(Form) }}
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+        </div>
+    </div>
+
+    {# ================= 5. BARRE DE NAVIGATION FIXE MOBILE ================= #}
+    <nav class="mg-bottom-nav">
+        <a href="{{ path('accueil') }}"><i class="bi bi-house"></i><span>Accueil</span></a>
+        <a href="{{('sessions')}}" class="active"><i class="bi bi-controller"></i><span>Sessions</span></a>
+        <a href="#"><i class="bi bi-wallet2"></i><span>Finances</span></a>
+        <a href="#"><i class="bi bi-bar-chart-fill"></i><span>Bilans</span></a>
+    </nav>
+
+</div>
+
+
 
 <script>
      // script pour afficher le teps restant en temps réel
@@ -185,18 +268,6 @@ function updateTimers() {
                 });
                 timer.dataset.notifieFin = "true";
             }
-
-            // 2. Clic automatique sur le bouton d'arrêt Symfony/Turbo
-            if (!timer.dataset.requeteEnvoyee) {
-                timer.dataset.requeteEnvoyee = "true"; // Évite les clics répétés
-                
-                const boutonArreter = timer.querySelector('.btn-arreter');
-                if (boutonArreter) {
-                    console.log(`Fermeture automatique déclenchée pour la ${consoleNom}.`);
-                    boutonArreter.click(); // Simule le clic sur le formulaire
-                }
-            }
-
             return;
         }
 
@@ -225,90 +296,4 @@ function updateTimers() {
 }
 
 </script>
-
-
-                        <!-- Actions rapides sur Mobile -->
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <a href="{{path ('add_time',{'id':Console.id} )}}" class="btn btn-outline-primary w-100 py-2.5 rounded-3 fw-bold btn-sm">
-                                    <i class="bi bi-plus-circle me-1"></i> +15 min
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="{{path ('close_console',{'id':Console.id})}}" class=" btn-arreter btn btn-danger w-100 py-2.5 rounded-3 fw-bold btn-sm">
-                                    <i class="bi bi-stop-fill me-1"></i> Arrêter
-                                </a>
-                                {# <button class="btn btn-danger w-100 py-2.5 rounded-3 fw-bold btn-sm">
-                                    
-                                </button> #}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% else %}
-            {# --- CARTE CONSOLE 2 : DISPONIBLE (LANCEMENT DE SESSION) --- #}
-            <div class="col-12">
-                <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
-                    <div class="card-body p-3">
-                        <!-- Top Card -->
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="bg-secondary-subtle text-secondary rounded-3 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px; font-size: 1.3rem;">
-                                    <i class="bi bi-controller"></i>
-                                </div>
-                                <div>
-                                    <h5 class="fw-bold mb-0 text-dark">{{Console.nom}}</h5>
-                                <h6 class=" fw-semibold mb-0 text-dark">{{Console.type}}</h6>
-                                    <span class="badge bg-success-subtle text-success rounded-pill px-2.5 py-1">Disponible</span>
-                                </div>
-                            </div>
-                            <i class="bi bi-play-circle-fill text-success fs-3"></i>
-                        </div>
-                        {# pour recuperer le formulaire de la console  #}
-                        {# {% set consoleId =  console.id  %} #}
-                                {% set Form = forms[Console.id] %}
-                                {{ form_start(Form, {'attr': {'data-turbo': 'false'}}) }}
-
-                                    <div class="mb-3">
-                                        {{ form_label(Form.duree) }}
-                                        {{ form_widget(Form.duree, {'attr': {'class': 'form_control form-select bg-light border-0 rounded-3 py-2 text-dark fw-medium'}}) }}
-                                        {{ form_errors(Form.duree) }} 
-                                    </div>
-                                    <div class="mb-3">
-                                        {{ form_label(Form.montant) }}
-                                    {{ form_widget(Form.montant,{'attr': {'placeholder':'---FCFA','class': 'form_control border-1 rounded-3 py-2 text-dark fw-medium w-100'}}) }}
-                                        {{ form_errors(Form.montant) }}
-                                    </div>
-                                        {{ form_widget(Form.Console, {
-                                            'value': Console.id, 
-                                            'attr': {'style': 'display: none;'}
-                                        }) }}
-
-
-
-                            <button type="submit" class="btn btn-success w-100 py-2.5 rounded-3 fw-bold shadow-sm">
-                                <i class="bi bi-lightning-charge-fill me-1"></i> Lancer la session
-                            </button>
-
-                                {{ form_end(Form) }}
-
-                        </form>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    {% endfor %}
-        </div>
-    </div>
-
-    {# ================= 5. BARRE DE NAVIGATION FIXE MOBILE ================= #}
-    <nav class="mg-bottom-nav">
-        <a href="{{ path('accueil') }}"><i class="bi bi-house"></i><span>Accueil</span></a>
-        <a href="{{('sessions')}}" class="active"><i class="bi bi-controller"></i><span>Sessions</span></a>
-        <a href="#"><i class="bi bi-wallet2"></i><span>Finances</span></a>
-        <a href="#"><i class="bi bi-bar-chart-fill"></i><span>Bilans</span></a>
-    </nav>
-
-</div>
 {% endblock %}

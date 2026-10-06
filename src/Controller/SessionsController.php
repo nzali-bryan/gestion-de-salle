@@ -115,7 +115,7 @@ final class SessionsController extends AbstractController
         return $this->redirectToRoute('sessions', [], Response::HTTP_SEE_OTHER);
     }
     // fermer la session
-        #[Route('/close_console/{id}', name:'close_console')]
+        #[Route('/close_session/{id}', name:'close_console')]
     public function closeSessions(Request $request,Console $console,SessionsJeuRepository $sessionsJeuRepository, EntityManagerInterface $entityManager)
     {
         // ça regarde la derniere session active

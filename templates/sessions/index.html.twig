@@ -106,6 +106,7 @@
 
 
 <div class="bg-light rounded-3 p-3 text-center mb-3 session-timer" 
+    data-session-id="{{ Console.id }}"
      data-date-debut="{{ derniereSession.debut|date('H:i:s') }}" 
      data-date-fin="{{ derniereSession.fin|date('H:i:s') }}"
      data-console-nom= "{{Console.nom}}">
@@ -120,68 +121,109 @@
 
 <script>
      // script pour afficher le teps restant en temps réel
-document.addEventListener("DOMContentLoaded", function () {
-    function updateTimers() {
-        document.querySelectorAll('.session-timer').forEach(timer => {
-            const debutStr = timer.getAttribute('data-date-debut');
-            const finStr = timer.getAttribute('data-date-fin');
-            if (!debutStr || !finStr) return;
-
-            const now = new Date();
-            
-            // Fonction express pour transformer "HH:MM:SS" en vraie Date du jour
-            const createDate = (timeStr) => {
-                const [h, m, s] = timeStr.split(':').map(Number);
-                return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s);
-            };
-
-            const debut = createDate(debutStr);
-            let fin = createDate(finStr);
-
-            // Gestion du passage à minuit (ex: session de 23h à 01h)
-            if (fin < debut) fin.setDate(fin.getDate() + 1);
-
-            const tempsTotal = fin - debut;
-            const tempsRestant = fin - now;
-            const displayEl = timer.querySelector('.countdown-display');
-            const progressEl = timer.querySelector('.progress-bar-display');
-
-            // 1. Session terminée
-            if (tempsRestant <= 0) {
-                if (displayEl) {
-                    displayEl.innerHTML = "Terminé !";
-                    displayEl.classList.replace('text-dark', 'text-danger');
-                }
-                if (progressEl) {
-                    progressEl.style.width = "100%";
-                    progressEl.classList.remove('progress-bar-animated');
-                }
-                return;
-            }
-
-            // 2. Remplissage de la barre (Progression croissante de 0% à 100%)
-            if (progressEl && tempsTotal > 0) {
-                const progression = 100 - ((tempsRestant / tempsTotal) * 100);
-                progressEl.style.width = Math.max(0, progression) + "%";
-            }
-
-            // 3. Calcul du format HH:MM:SS
-            const h = Math.floor(tempsRestant / 3600000);
-            const m = Math.floor((tempsRestant % 3600000) / 60000);
-            const s = Math.floor((tempsRestant % 60000) / 1000);
-
-            // Formatage propre : ajoute un zéro devant si < 10
-            const pad = (n) => String(n).padStart(2, '0');
-            
-            if (displayEl) {
-                displayEl.innerHTML = h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
-            }
-        });
+document.addEventListener("turbo:load", function () {
+    // 1. DEMANDE D'AUTORISATION (Une seule fois au chargement si pas encore répondu)
+    if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
     }
 
+    // 2. SÉCURITÉ INTERVALLE (Évite de cumuler les boucles avec les rechargements Turbo)
+    if (window.timerInterval) clearInterval(window.timerInterval);
+    
     updateTimers();
-    setInterval(updateTimers, 1000);
+    window.timerInterval = setInterval(updateTimers, 1000);
 });
+
+function updateTimers() {
+    document.querySelectorAll('.session-timer').forEach(timer => {
+        const debutStr = timer.getAttribute('data-date-debut');
+        const finStr = timer.getAttribute('data-date-fin');
+        const consoleNom = timer.getAttribute('data-console-nom') || 'Console';
+        if (!debutStr || !finStr) return;
+
+        const now = new Date();
+        const createDate = (timeStr) => {
+            const [h, m, s] = timeStr.split(':').map(Number);
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s);
+        };
+
+        const debut = createDate(debutStr);
+        let fin = createDate(finStr);
+        if (fin < debut) fin.setDate(fin.getDate() + 1);
+
+        const tempsTotal = fin - debut;
+        const tempsRestant = fin - now;
+        const displayEl = timer.querySelector('.countdown-display');
+        const progressEl = timer.querySelector('.progress-bar-display');
+
+        // --- A. ALERTE DES 5 MINUTES ---
+        // 300000 ms = 5 minutes
+        if (tempsRestant > 0 && tempsRestant <= 300000) {
+            if (!timer.dataset.notifieAlerte && Notification.permission === "granted") {
+                new Notification("Temps bientôt écoulé !", {
+                    body: `Il reste moins de 5 minutes sur la ${consoleNom}.`,
+                });
+                timer.dataset.notifieAlerte = "true"; // Bloque le spam
+            }
+        }
+
+        // --- B. TEMPS ÉCOULÉ : APPAREIL TERMINÉ (0 SECONDE) ---
+        if (tempsRestant <= 0) {
+            if (displayEl) {
+                displayEl.innerHTML = "Terminé !";
+                displayEl.classList.replace('text-dark', 'text-danger');
+            }
+            if (progressEl) {
+                progressEl.style.width = "100%";
+                progressEl.classList.remove('progress-bar-animated');
+            }
+
+            // 1. Notification de fin de session
+            if (!timer.dataset.notifieFin && Notification.permission === "granted") {
+                new Notification("Session expirée !", {
+                    body: `Le temps est totalement écoulé sur la ${consoleNom}.`,
+                });
+                timer.dataset.notifieFin = "true";
+            }
+
+            // 2. Clic automatique sur le bouton d'arrêt Symfony/Turbo
+            if (!timer.dataset.requeteEnvoyee) {
+                timer.dataset.requeteEnvoyee = "true"; // Évite les clics répétés
+                
+                const boutonArreter = timer.querySelector('.btn-arreter');
+                if (boutonArreter) {
+                    console.log(`Fermeture automatique déclenchée pour la ${consoleNom}.`);
+                    boutonArreter.click(); // Simule le clic sur le formulaire
+                }
+            }
+
+            return;
+        }
+
+        // --- C. RÉINITIALISATION (Si du temps est rajouté via +15 min) ---
+        if (tempsRestant > 300000) {
+            timer.removeAttribute('data-notifieAlerte');
+            timer.removeAttribute('data-notifieFin');
+            timer.removeAttribute('data-requeteEnvoyee');
+        }
+
+        // --- D. MISE À JOUR DE LA BARRE ET DU TEXTE ---
+        if (progressEl && tempsTotal > 0) {
+            const progression = 100 - ((tempsRestant / tempsTotal) * 100);
+            progressEl.style.width = Math.max(0, progression) + "%";
+        }
+
+        const h = Math.floor(tempsRestant / 3600000);
+        const m = Math.floor((tempsRestant % 3600000) / 60000);
+        const s = Math.floor((tempsRestant % 60000) / 1000);
+        const pad = (n) => String(n).padStart(2, '0');
+        
+        if (displayEl) {
+            displayEl.innerHTML = h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+        }
+    });
+}
+
 </script>
 
 
@@ -193,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 </a>
                             </div>
                             <div class="col-6">
-                                <a href="{{path ('close_console',{'id':Console.id})}}" class="btn btn-danger w-100 py-2.5 rounded-3 fw-bold btn-sm">
+                                <a href="{{path ('close_console',{'id':Console.id})}}" class=" btn-arreter btn btn-danger w-100 py-2.5 rounded-3 fw-bold btn-sm">
                                     <i class="bi bi-stop-fill me-1"></i> Arrêter
                                 </a>
                                 {# <button class="btn btn-danger w-100 py-2.5 rounded-3 fw-bold btn-sm">

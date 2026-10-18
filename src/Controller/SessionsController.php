@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Console;
 use App\Entity\Journee;
 use App\Entity\SessionsJeu;
+use App\Entity\Transaction;
 use App\Form\SessionsType;
 use App\Repository\ConsoleRepository;
 use App\Repository\JourneeRepository;
@@ -130,6 +131,15 @@ final class SessionsController extends AbstractController
             $console=$derniereSession->getConsole();
             $console->setStatut('Libre');
             $entityManager->persist($derniereSession);
+
+
+            // On ajoute une transaction pour mettre ca comme une entrée
+            $transaction= new Transaction();
+            $transaction->setSessions($derniereSession);
+            $transaction->setType('entrée');
+            $transaction->setMontant($derniereSession->getMontant());            
+            $transaction->setCreatadAt(new \DateTimeImmutable());
+            $entityManager->persist($transaction);
             $entityManager->persist($console);
             $entityManager->flush();
         }

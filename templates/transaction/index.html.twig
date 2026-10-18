@@ -1,20 +1,221 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TransactionController!{% endblock %}
-
+{% block title %}Maxi Gaming{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css1/dashboard.css') }}">
+    <link rel="stylesheet" href="https://jsdelivr.net">
+{% endblock %}
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="container-fluid py-4 bg-light min-vh-100">
+    <!-- En-tête de la page Finances -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h1 class="h3 fw-bold text-dark mb-1">Comptabilité & Finances</h1>
+            <p class="text-muted small mb-0">Suivez l'état financier global, les gains par console et équilibrez vos bilans journaliers.</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <!-- Boutons d'action pour ouvrir des formulaires (Modaux Bootstrap conseillés) -->
+            <button class="btn btn-primary btn-sm rounded-3 me-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#modalRevenuExterne">
+                <i class="bi bi-plus-circle me-1"></i> Ajouter un Revenu Externe
+            </button>
+            <button class="btn btn-outline-danger btn-sm rounded-3 fw-semibold" data-bs-toggle="modal" data-bs-target="#modalDepense">
+                <i class="bi bi-dash-circle me-1"></i> Enregistrer une Dépense
+            </button>
+        </div>
+    </div>
+<!-- Les modals d'ajout de revenus où de depenses -->
+<!-- ========================================== -->
+<!-- MODAL 1 : AJOUTER UN REVENU EXTERNE       -->
+<!-- ========================================== -->
+<div class="modal fade" id="modalRevenuExterne" tabindex="-1" aria-labelledby="modalRevenuExterneLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3 shadow">
+            <div class="modal-header bg-primary text-white py-3">
+                <h5 class="modal-title fw-bold" id="modalRevenuExterneLabel">
+                    <i class="bi bi-plus-circle me-2"></i>Nouveau Revenu Externe
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            {{ form_start(form) }}
+                <div class="modal-body p-4">
+                    {{ form_row(form.type,{'label_attr': {'class': 'form_control fw-semibold text-secondary'}}) }}
+                    
+                    <div class="mb-3">
+                        {{ form_row(form.montant, {'label_attr': {'class': 'form_control fw-semibold text-secondary'}}) }}
+                    </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/projet/projet perso/symfony/gestion de salle/src/Controller/TransactionController.php</code></li>
-        <li>Your template at <code>D:/projet/projet perso/symfony/gestion de salle/templates/transaction/index.html.twig</code></li>
-    </ul>
+                    <div class="mb-3">
+                        {{ form_row(form.description,{'label_attr': {'class': 'form_control fw-semibold text-secondary'}}) }}
+                    </div>
+                </div>
+                <div class="modal-footer bg-light py-2">
+                    <button type="button" class="btn btn-sm btn-secondary rounded-3" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-sm btn-primary rounded-3 fw-semibold">Enregistrer le Revenu</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
 </div>
+
+
+    <!-- Section 1 : Cartes de Bilan Journalier Actuel -->
+    <div class="row g-3 mb-4">
+        <!-- Revenus Totaux (Internes + Externes) -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted small text-uppercase fw-bold tracking-wider">Revenus du Jour</span>
+                    <div class="bg-success-subtle text-success rounded-circle px-2 py-1 small">
+                        <i class="bi bi-arrow-up-right"></i>
+                    </div>
+                </div>
+                {# <!-- Remplacer par vos variables Twig réelles (ex: {{ revenusDuJour }}) --> #}
+                <h3 class="fw-bold text-dark m-0">150 000 FCFA</h3>
+                <span class="text-muted x-small">Dont internes : 120k | Externes : 30k</span>
+            </div>
+        </div>
+
+        <!-- Dépenses du Jour -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted small text-uppercase fw-bold tracking-wider">Dépenses du Jour</span>
+                    <div class="bg-danger-subtle text-danger rounded-circle px-2 py-1 small">
+                        <i class="bi bi-arrow-down-left"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold text-dark m-0">45 000 FCFA</h3>
+                <span class="text-muted x-small">Matériels, abonnements, etc.</span>
+            </div>
+        </div>
+
+        <!-- Bilan net de la journée -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <!-- La classe 'bg-success-subtle' ou 'bg-danger-subtle' peut être mise dynamiquement selon si le bilan est positif ou négatif -->
+            <div class="card border-0 shadow-sm rounded-3 p-3 bg-success-subtle text-success-inner">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-success small text-uppercase fw-bold tracking-wider">Bilan Net (R - D)</span>
+                    <div class="bg-success text-white rounded-circle px-2 py-1 small">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+                </div>
+                <!-- Gain net calculé directement -->
+                <h3 class="fw-bold m-0">+ 105 000 FCFA</h3>
+                <span class="text-success-inner small fw-semibold">Rentable aujourd'hui</span>
+            </div>
+        </div>
+
+        <!-- Statut Clôture de la journée -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3 text-center d-flex flex-column justify-content-center">
+                <span class="text-muted small text-uppercase fw-bold tracking-wider mb-2">État de la journée</span>
+                <!-- Formulaire pour clôturer la journée en cours -->
+                                <a href="{{ path('close_journee', {'id': journee.id}) }}" class="mg-close-day">
+                                    <i class="bi bi-lock-fill me-1"></i>Fermer la journée
+                                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2 : Rendement Global par Poste de Travail (Console) -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+                <h2 class="h5 fw-bold text-dark mb-3"><i class="bi bi-controller me-2 text-primary"></i>Rendement Analytique par Console</h2>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle border-light">
+                        <thead class="table-light text-muted small text-uppercase">
+                            <tr>
+                                <th>Console / Poste</th>
+                                <th class="text-center">Revenu Journalier</th>
+                                <th class="text-center">Revenu Hebdomadaire</th>
+                                <th class="text-center">Revenu Mensuel</th>
+                                <th class="text-end">Rentabilité / Tendance</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            <!-- Ligne Exemple Console 1 : Boucle Twig à mettre ici -->
+                            <tr>
+                                <td class="fw-bold text-dark">
+                                    <span class="badge bg-primary me-2">PS5 #01</span> Salon Principal
+                                </td>
+                                <td class="text-center fw-semibold text-dark">45 000 FCFA</td>
+                                <td class="text-center text-muted">210 000 FCFA</td>
+                                <td class="text-center text-muted">840 000 FCFA</td>
+                                <td class="text-end">
+                                    <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1"><i class="bi bi-graph-up me-1"></i> Top Poste</span>
+                                </td>
+                            </tr>
+                            <!-- Ligne Exemple Console 2 -->
+                            <tr>
+                                <td class="fw-bold text-dark">
+                                    <span class="badge bg-secondary me-2">XBOX #01</span> Zone VIP
+                                </td>
+                                <td class="text-center fw-semibold text-dark">32 000 FCFA</td>
+                                <td class="text-center text-muted">150 000 FCFA</td>
+                                <td class="text-center text-muted">610 000 FCFA</td>
+                                <td class="text-end">
+                                    <span class="badge bg-light text-dark rounded-pill px-3 py-1"><i class="bi bi-dash me-1"></i> Stable</span>
+                                </td>
+                            </tr>
+                            <!-- Ligne Exemple Console 3 -->
+                            <tr>
+                                <td class="fw-bold text-dark">
+                                    <span class="badge bg-dark me-2">PC Gamer #01</span> Zone Stream
+                                </td>
+                                <td class="text-center fw-semibold text-dark">12 000 FCFA</td>
+                                <td class="text-center text-muted">45 000 FCFA</td>
+                                <td class="text-center text-muted">180 000 FCFA</td>
+                                <td class="text-end">
+                                    <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-1"><i class="bi bi-graph-down me-1"></i> Faible</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3 : Historique Récent des Flux Financiers (Grand Journal) -->
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h2 class="h5 fw-bold text-dark m-0"><i class="bi bi-journal-text me-2 text-secondary"></i>Dernières Transactions de la Journée</h2>
+                    <a href="#" class="btn btn-link btn-sm text-decoration-none fw-semibold p-0">Voir tout le grand journal <i class="bi bi-arrow-right"></i></a>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle border-light">
+                        <thead class="table-light text-muted x-small text-uppercase">
+                            <tr>
+                                <th>Heure / Date</th>
+                                <th>Type de Flux</th>
+                                <th>Désignation / Source</th>
+                                <th class="text-end">Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            <!-- Exemple Revenu Interne Automatisé -->
+                            <tr>
+                                <td class="text-muted">09:15</td>
+                                <td><span class="badge bg-success-subtle text-success rounded-pill">Rev. Interne</span></td>
+                                <td class="text-dark fw-medium">Fin de session de jeu — <span class="text-muted">PS5 #01 (+15 min)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>   
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="mg-bottom-nav">
+        <a href="{{ path('accueil') }}"><i class="bi bi-house"></i><span>Accueil</span></a>
+        <a href="{{path('sessions')}}" ><i class="bi bi-controller"></i><span>Sessions</span></a>
+        <a href="{{ path('transaction') }}" class="active"><i class="bi bi-wallet2"></i><span>Finances</span></a>
+        <a href="#"><i class="bi bi-bar-chart-fill"></i><span>Bilans</span></a>
+    </nav>                
 {% endblock %}

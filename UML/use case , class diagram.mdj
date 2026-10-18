@@ -3329,9 +3329,9 @@
 											},
 											"font": "Arial;13;1",
 											"parentStyle": true,
-											"left": 411,
+											"left": 417,
 											"top": 126.5,
-											"width": 250,
+											"width": 278,
 											"height": 13,
 											"text": "Gestion des sessions de jeu"
 										},
@@ -3367,9 +3367,9 @@
 									],
 									"font": "Arial;13;0",
 									"parentStyle": true,
-									"left": 406,
+									"left": 412,
 									"top": 119.5,
-									"width": 260,
+									"width": 288,
 									"height": 25,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAGgevELl203xfw="
@@ -3475,7 +3475,7 @@
 							"containerChangeable": true,
 							"left": 352,
 							"top": 112,
-							"width": 368,
+							"width": 408,
 							"height": 40,
 							"nameCompartment": {
 								"$ref": "AAAAAAGgevELl2022Co="
@@ -6393,8 +6393,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 300,
-									"top": 220,
+									"left": 309,
+									"top": 221,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -6415,8 +6415,8 @@
 									"visible": null,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 294,
-									"top": 206,
+									"left": 303,
+									"top": 207,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -6437,8 +6437,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 313,
-									"top": 247,
+									"left": 322,
+									"top": 248,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -6460,7 +6460,7 @@
 									"font": "Arial;13;0",
 									"parentStyle": false,
 									"left": 140,
-									"top": 297,
+									"top": 298,
 									"height": 13,
 									"alpha": 0.5235987755982988,
 									"distance": 30,
@@ -6481,8 +6481,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 136,
-									"top": 284,
+									"left": 137,
+									"top": 285,
 									"height": 13,
 									"alpha": 0.7853981633974483,
 									"distance": 40,
@@ -6504,7 +6504,7 @@
 									"font": "Arial;13;0",
 									"parentStyle": false,
 									"left": 147,
-									"top": 324,
+									"top": 325,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 25,
@@ -6525,7 +6525,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 462,
+									"left": 480,
 									"top": 144,
 									"height": 13,
 									"alpha": -0.5235987755982988,
@@ -6546,8 +6546,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 454,
-									"top": 133,
+									"left": 472,
+									"top": 132,
 									"height": 13,
 									"alpha": -0.7853981633974483,
 									"distance": 40,
@@ -6567,7 +6567,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 477,
+									"left": 495,
 									"top": 167,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -6616,7 +6616,7 @@
 								"$ref": "AAAAAAGgevCdC20Ki8Y="
 							},
 							"lineStyle": 1,
-							"points": "123:328;492:153",
+							"points": "123:329;510:153",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGgevmMdXnwd4Y="
@@ -8952,12 +8952,12 @@
 									},
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 602,
-									"top": 125,
+									"left": 656,
+									"top": 167,
 									"width": 55.65625,
 									"height": 13,
-									"alpha": 1.5707963267948966,
-									"distance": 30,
+									"alpha": 0.14120467780708384,
+									"distance": 65.5133574166368,
 									"hostEdge": {
 										"$ref": "AAAAAAGgev3tC3ohUd8="
 									},
@@ -9812,6 +9812,20 @@
 							"propertyLabel": {
 								"$ref": "AAAAAAGgewD2DWmR0Eg="
 							}
+						},
+						{
+							"_type": "UMLTextView",
+							"_id": "AAAAAAGhEDKlIY2MMCk=",
+							"_parent": {
+								"$ref": "AAAAAAGgeu/q32ztnQk="
+							},
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"left": 771,
+							"top": 141,
+							"width": 100,
+							"height": 25,
+							"text": "Text"
 						}
 					]
 				},

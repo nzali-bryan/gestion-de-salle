@@ -4,7 +4,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <!-- On réutilise votre CSS de base et on ajoute Bootstrap Icons si ce n'est pas fait -->
     <link rel="stylesheet" href="{{ asset('css1/dashboard.css') }}">
     <link rel="stylesheet" href="https://jsdelivr.net">
 {% endblock %}
@@ -194,7 +193,7 @@
     <nav class="mg-bottom-nav">
         <a href="{{ path('accueil') }}"><i class="bi bi-house"></i><span>Accueil</span></a>
         <a href="{{('sessions')}}" class="active"><i class="bi bi-controller"></i><span>Sessions</span></a>
-        <a href="#"><i class="bi bi-wallet2"></i><span>Finances</span></a>
+        <a href="{{ path('transaction') }}"><i class="bi bi-wallet2"></i><span>Finances</span></a>
         <a href="#"><i class="bi bi-bar-chart-fill"></i><span>Bilans</span></a>
     </nav>
 

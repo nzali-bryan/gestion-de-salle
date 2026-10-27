@@ -159,6 +159,68 @@
         </div>
     </div>
 
+    <!-- Section : Filtre Personnalisé (À insérer dans ton container) -->
+<div class="card border-0 shadow-sm rounded-3 p-4 mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-4">
+            <h2 class="h5 fw-bold text-dark mb-1"><i class="bi bi-calendar3 me-2 text-primary"></i>Période du Bilan</h2>
+            <p class="text-muted small mb-0">Du {{ dateDebut|date('d/m/Y') }} au {{ dateFin|date('d/m/Y') }}</p>
+        </div>
+        <!-- Formulaire de sélection des dates -->
+        <div class="col-md-8">
+            <form method="GET" class="row g-2 justify-content-md-end">
+                <div class="col-auto">
+                    <input type="date" name="date_debut" value="{{ dateDebut|date('Y-m-d') }}" class="form-control form-control-sm rounded-3">
+                </div>
+                <div class="col-auto">
+                    <input type="date" name="date_fin" value="{{ dateFin|date('Y-m-d') }}" class="form-control form-control-sm rounded-3">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary btn-sm rounded-3 fw-semibold">
+                        <i class="bi bi-filter-left"></i> Générer le Bilan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <hr class="text-muted opacity-25 my-4">
+
+    <!-- Affichage du Résumé Analytique de la période demandée -->
+    <div class="row g-3">
+        <!-- Entrées Période -->
+        <div class="col-md-3">
+            <div class="p-3 bg-light rounded-3 border border-light">
+                <span class="text-muted small text-uppercase fw-bold d-block mb-1">Recettes Période</span>
+                <span class="h4 fw-bold text-success">{{ bilan.totalEntrees ?? 0 }} FCFA</span>
+            </div>
+        </div>
+        <!-- Sorties Période -->
+        <div class="col-md-3">
+            <div class="p-3 bg-light rounded-3 border border-light">
+                <span class="text-muted small text-uppercase fw-bold d-block mb-1">Dépenses Période</span>
+                <span class="h4 fw-bold text-danger">{{ bilan.totalSorties ?? 0 }} FCFA</span>
+            </div>
+        </div>
+        <!-- Bénéfice Net Période -->
+        <div class="col-md-3">
+            {% set benefice = (bilan.totalEntrees ?? 0) - (bilan.totalSorties ?? 0) %}
+            <div class="p-3 {{ benefice >= 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }} rounded-3">
+                <span class="small text-uppercase fw-bold d-block mb-1">Résultat Net</span>
+                <span class="h4 fw-bold">{{ benefice }} FCFA</span>
+            </div>
+        </div>
+        <!-- Volume d'activité -->
+        <div class="col-md-3">
+            <div class="p-3 bg-primary-subtle text-primary rounded-3">
+                <span class="small text-uppercase fw-bold d-block mb-1">Volume d'Activité</span>
+                <span class="h4 fw-bold d-block">{{ bilan.totalSessionsJouees }} Sessions</span>
+                <span class="text-muted tiny" style="font-size: 0.75rem;">({{ bilan.totalMouvements }} opérations comptables)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- Section 3 : Historique Récent des Flux Financiers (Grand Journal) -->
     <div class="row g-4">
         <div class="col-12">

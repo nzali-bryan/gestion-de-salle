@@ -40,6 +40,22 @@ final class TransactionController extends AbstractController
                 $totalSortant = (int) $ligne['total'];
             }
         }
+        //  filtrage plus personalisés du bilan 
+    $dateDebutStr = $request->query->get('date_debut');
+    $dateFinStr = $request->query->get('date_fin');
+
+    if ($dateDebutStr && $dateFinStr) {
+        $dateDebut = new \DateTimeImmutable($dateDebutStr);
+        $dateFin = new \DateTimeImmutable($dateFinStr);
+    } else {
+        $dateDebut = new \DateTimeImmutable('-30 days');
+        $dateFin = new \DateTimeImmutable('now');
+    }
+
+    $bilan = $transactionRepository->findBilan($dateDebut, $dateFin);
+
+
+        //  filtrage plus personalisés du bilan 
          $derniereJournee=$journeeRepository->findOneBy([],['id'=>'DESC']);
         return $this->render('transaction/index.html.twig', [
             'derniereTrans'=>$dernireTrans,
@@ -47,7 +63,11 @@ final class TransactionController extends AbstractController
             'totalSortant'=>$totalSortant,
            'journee' => $derniereJournee,
            'form'=>$form,
-           'statistiques' =>$stats
+           'statistiques' =>$stats,
+           'bilan' => $bilan,
+            'dateDebut' => $dateDebut,
+            'dateFin' => $dateFin,
+
         ]);
 
         

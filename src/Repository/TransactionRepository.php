@@ -79,6 +79,26 @@ public function findRevenusParConsole(): array
 }
 
 
+public function findBilan(\DateTimeInterface $debut, \DateTimeInterface $fin): array
+{
+    // On s'assure que les dates couvrent bien toute la journée du début à la fin
+    $dateDebut = \DateTimeImmutable::createFromInterface($debut)->setTime(0, 0, 0);
+    $dateFin = \DateTimeImmutable::createFromInterface($fin)->setTime(23, 59, 59);
+
+    return $this->createQueryBuilder('t')
+        ->select("SUM(CASE WHEN t.type = 'entrée' THEN t.montant ELSE 0 END) as totalEntrees")
+        ->addSelect("SUM(CASE WHEN t.type = 'sortie' THEN t.montant ELSE 0 END) as totalSorties")
+        // Compte le nombre de transactions uniques liées à une session de jeu
+        ->addSelect("COUNT(DISTINCT t.Sessions) as totalSessionsJouees")
+        // Compte le nombre total de mouvements (entrées + sorties)
+        ->addSelect("COUNT(t.id) as totalMouvements")
+        ->where('t.creatadAt BETWEEN :debut AND :fin')
+        ->setParameter('debut', $dateDebut)
+        ->setParameter('fin', $dateFin)
+        ->getQuery()
+        ->getSingleResult(); // Retourne un tableau unique avec nos statistiques
+}
+
 //    /**
 //     * @return Transaction[] Returns an array of Transaction objects
 //     */

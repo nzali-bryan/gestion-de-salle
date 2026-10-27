@@ -47,6 +47,9 @@
                     <div class="mb-3">
                         {{ form_row(form.description,{'label_attr': {'class': 'form_control fw-semibold text-secondary'}}) }}
                     </div>
+                    <div class="mb-3">
+                        {{ form_row(form.creatadAt,{'label_attr': {'class': 'form_control fw-semibold text-secondary'}}) }}
+                    </div>
                 </div>
                 <div class="modal-footer bg-light py-2">
                     <button type="button" class="btn btn-sm btn-secondary rounded-3" data-bs-dismiss="modal">Annuler</button>
@@ -69,9 +72,9 @@
                         <i class="bi bi-arrow-up-right"></i>
                     </div>
                 </div>
-                {# <!-- Remplacer par vos variables Twig réelles (ex: {{ revenusDuJour }}) --> #}
-                <h3 class="fw-bold text-dark m-0">150 000 FCFA</h3>
-                <span class="text-muted x-small">Dont internes : 120k | Externes : 30k</span>
+                
+                <h3 class="fw-bold text-dark m-0">{{totalEntrant }}</h3>
+               
             </div>
         </div>
 
@@ -84,8 +87,8 @@
                         <i class="bi bi-arrow-down-left"></i>
                     </div>
                 </div>
-                <h3 class="fw-bold text-dark m-0">45 000 FCFA</h3>
-                <span class="text-muted x-small">Matériels, abonnements, etc.</span>
+                <h3 class="fw-bold text-dark m-0">{{totalSortant}}</h3>
+                
             </div>
         </div>
 
@@ -100,7 +103,7 @@
                     </div>
                 </div>
                 <!-- Gain net calculé directement -->
-                <h3 class="fw-bold m-0">+ 105 000 FCFA</h3>
+                <h3 class="fw-bold m-0">{{ totalEntrant - totalSortant }}</h3>
                 <span class="text-success-inner small fw-semibold">Rentable aujourd'hui</span>
             </div>
         </div>
@@ -135,42 +138,20 @@
                             </tr>
                         </thead>
                         <tbody class="small">
-                            <!-- Ligne Exemple Console 1 : Boucle Twig à mettre ici -->
-                            <tr>
-                                <td class="fw-bold text-dark">
-                                    <span class="badge bg-primary me-2">PS5 #01</span> Salon Principal
-                                </td>
-                                <td class="text-center fw-semibold text-dark">45 000 FCFA</td>
-                                <td class="text-center text-muted">210 000 FCFA</td>
-                                <td class="text-center text-muted">840 000 FCFA</td>
-                                <td class="text-end">
-                                    <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1"><i class="bi bi-graph-up me-1"></i> Top Poste</span>
-                                </td>
-                            </tr>
-                            <!-- Ligne Exemple Console 2 -->
-                            <tr>
-                                <td class="fw-bold text-dark">
-                                    <span class="badge bg-secondary me-2">XBOX #01</span> Zone VIP
-                                </td>
-                                <td class="text-center fw-semibold text-dark">32 000 FCFA</td>
-                                <td class="text-center text-muted">150 000 FCFA</td>
-                                <td class="text-center text-muted">610 000 FCFA</td>
-                                <td class="text-end">
-                                    <span class="badge bg-light text-dark rounded-pill px-3 py-1"><i class="bi bi-dash me-1"></i> Stable</span>
-                                </td>
-                            </tr>
-                            <!-- Ligne Exemple Console 3 -->
-                            <tr>
-                                <td class="fw-bold text-dark">
-                                    <span class="badge bg-dark me-2">PC Gamer #01</span> Zone Stream
-                                </td>
-                                <td class="text-center fw-semibold text-dark">12 000 FCFA</td>
-                                <td class="text-center text-muted">45 000 FCFA</td>
-                                <td class="text-center text-muted">180 000 FCFA</td>
-                                <td class="text-end">
-                                    <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-1"><i class="bi bi-graph-down me-1"></i> Faible</span>
-                                </td>
-                            </tr>
+                            {% for stat in statistiques %}
+                                {# On stocke la valeur brute du jour dans data-revenu pour le script JS #}
+                                <tr data-revenu="{{ stat.jour }}">
+                                    <td><strong>{{ stat.consoleNom }}</strong></td>
+                                    <td class="text-success">{{ stat.jour }} FCFA</td>
+                                    <td>{{ stat.semaine }} FCFA</td>
+                                    <td>{{ stat.mois }} FCFA</td>
+                                    <td> FCFA</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4">Aucune donnée disponible.</td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -198,11 +179,17 @@
                             </tr>
                         </thead>
                         <tbody class="small">
-                            <!-- Exemple Revenu Interne Automatisé -->
                             <tr>
-                                <td class="text-muted">09:15</td>
-                                <td><span class="badge bg-success-subtle text-success rounded-pill">Rev. Interne</span></td>
-                                <td class="text-dark fw-medium">Fin de session de jeu — <span class="text-muted">PS5 #01 (+15 min)</span></td>
+                                <td class="text-muted">{{derniereTrans.creatadAt |date('H:i') }}</td>
+                                <td>
+                                    {%  if derniereTrans.type == 'entrée'%}
+                                        <span class="badge bg-success-subtle text-success rounded-pill">REVENUS</span>
+                                    {% else %}
+                                        <span class="badge bg-success-subtle text-success rounded-pill">Depense</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-dark fw-medium">{{ derniereTrans.description }}/{{ derniereTrans.Sessions.Console.nom ?? '--'}}</span></td>
+                                <td class="text-dark fw-medium">{{ derniereTrans.montant }}</td>
                             </tr>
                         </tbody>
                     </table>   
@@ -216,4 +203,21 @@
         <a href="{{ path('transaction') }}" class="active"><i class="bi bi-wallet2"></i><span>Finances</span></a>
         <a href="#"><i class="bi bi-bar-chart-fill"></i><span>Bilans</span></a>
     </nav>                
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const tableBody = document.getElementById("consoleTableBody");
+            // Récupère toutes les lignes du tableau sous forme de tableau JS
+            const rows = Array.from(tableBody.querySelectorAll("tr[data-revenu]"));
+
+            // Tri décroissant basé sur l'attribut data-revenu (le plus grand en haut)
+            rows.sort((rowA, rowB) => {
+                const revenuA = parseInt(rowA.getAttribute("data-revenu")) || 0;
+                const revenuB = parseInt(rowB.getAttribute("data-revenu")) || 0;
+                return revenuB - revenuA; 
+            });
+
+            // On ré-injecte les lignes triées dans le tableau
+            rows.forEach(row => tableBody.appendChild(row));
+        });
+    </script>
 {% endblock %}

@@ -1,0 +1,4 @@
+en cliquant sur lancer une session il faut un script javascript qui verifie si la journée est deja ouverte 
+ quand je ferme la session ca dois arreter toutes les sessions ouvertes 
+pour ajouter une transaction ca verifie que 60% du temps c'est écouoler parce qu'il peut changer d'avis (min et ne plus donner l'argent où soit un petit bouton annuler la transactio comme une croix)
+et dans l'onglet transaction pour l'ajout de depenses ou revenus on va faire du genre  pour la date il y 'aura un bouton automaatique ou lui meme il choisi une date car  il peut  depenser quelque chose dimanche il vient remplir lundi 

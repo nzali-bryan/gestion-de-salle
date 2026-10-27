@@ -43,7 +43,7 @@
         {# <button class="mg-close-day">
             Fermer la journée
         </button> #}
-        <a href="{{ path('close_journee', {'id': journee.id}) }}" class="mg-close-day">
+        <a href="{{ path('close_journee', {'id': journee.id}) }}" data-turbo="false" class="mg-close-day">
             Fermer la journée
         </a>
     </section>

@@ -131,12 +131,13 @@ final class SessionsController extends AbstractController
             $console=$derniereSession->getConsole();
             $console->setStatut('Libre');
             $entityManager->persist($derniereSession);
-
+            
 
             // On ajoute une transaction pour mettre ca comme une entrée
             $transaction= new Transaction();
             $transaction->setSessions($derniereSession);
             $transaction->setType('entrée');
+            $transaction->setDescription(" argent d'une session");
             $transaction->setMontant($derniereSession->getMontant());            
             $transaction->setCreatadAt(new \DateTimeImmutable());
             $entityManager->persist($transaction);

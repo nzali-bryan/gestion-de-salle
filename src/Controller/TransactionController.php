@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Transaction;
 use App\Form\DepenseType;
 use App\Repository\JourneeRepository;
+use App\Repository\TransactionRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,23 +16,41 @@ use Symfony\Component\Routing\Attribute\Route;
 final class TransactionController extends AbstractController
 {
     #[Route('/transaction', name: 'transaction')]
-    public function index(Request $request,JourneeRepository $journeeRepository, EntityManagerInterface $em): Response
+    public function index(Request $request,JourneeRepository $journeeRepository,  TransactionRepository $transactionRepository , EntityManagerInterface $em, TransactionRepository $TR,): Response
     {
         $depense= new Transaction();
         $form= $this->createForm(DepenseType::class, $depense);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) { 
-            $depense->setCreatadAt( new \DateTimeImmutable());
+            // $depense->setCreatadAt( new \DateTimeImmutable());
             $em->persist($depense);
             $em->flush();
         }
-
+        $dernireTrans=$transactionRepository->findDerniereTrans();
+        $choixTotal = $transactionRepository->getDepRev();
+        $totalEntrant = 0;
+        $totalSortant = 0;
+        $stats=$transactionRepository->findRevenusParConsole();
+    // dd($stats);
+        foreach ($choixTotal as $ligne) {
+            if ($ligne['type'] === 'entrée') {
+                $totalEntrant = (int) $ligne['total'];
+            } elseif ($ligne['type'] === 'sortie') {
+                $totalSortant = (int) $ligne['total'];
+            }
+        }
          $derniereJournee=$journeeRepository->findOneBy([],['id'=>'DESC']);
         return $this->render('transaction/index.html.twig', [
+            'derniereTrans'=>$dernireTrans,
+            'totalEntrant'=>$totalEntrant,
+            'totalSortant'=>$totalSortant,
            'journee' => $derniereJournee,
-           'form'=>$form
+           'form'=>$form,
+           'statistiques' =>$stats
         ]);
+
+        
     }
     // #[Route ('/new_depense', name:'new_depense')]
     // public function depense(Request $request, Transaction $Transaction, EntityManagerInterface $em): Response
